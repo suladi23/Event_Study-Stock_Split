@@ -1,0 +1,5 @@
+---
+title: "Stock_splits_2010"
+format: pdf
+editor: visual
+---
