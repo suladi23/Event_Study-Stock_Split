@@ -1,5 +1,41 @@
 ---
 title: "Stock_splits_2010"
 format: pdf
+author: Disem Sula
 editor: visual
 ---
+
+```{r}
+#| message: false
+#| echo: false
+
+here::i_am("Stock_splits_2010-Event_study.Rproj")
+library(here)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(vroom)
+library(stringr)
+library(knitr)
+```
+
+```{r}
+#| message: false
+#| echo: false
+#This dataset will be used to look at stock splits events in 2010
+#The dataset includes a variable named Distype, including distribution events such us cash dividends (cd), stock splits
+df <- vroom("Distribution.csv")
+df_full <- vroom("Return.csv")
+```
+
+### Link to the github repository of this project {.appendix}
+
+[Github repository](https://github.com/suladi23/Event_Study-Stock_Split)
+
+### Sources for the data {.appendix}
+
+The data set is available [here](https://wrds-www.wharton.upenn.edu/pages/get-data/center-research-security-prices-crsp/annual-update/stock-version-2/).
+I used a smaller dataset for the stock splits (distribution) and the full dataset to conduct the event study (Annual update / Stock Version 2 / Daily Stock File)
+- Wharton Research Data Services. "WRDS" wrds.wharton.upenn.edu, accessed 2024-10-14.
+
+
