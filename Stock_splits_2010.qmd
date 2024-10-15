@@ -1,8 +1,9 @@
 ---
-title: "Stock_splits_2010"
+title: "Event Studies on the stock market"
 format: pdf
 author: Disem Sula
 editor: visual
+warning: false
 ---
 
 ```{r}
@@ -17,6 +18,10 @@ library(dplyr)
 library(vroom)
 library(stringr)
 library(knitr)
+library(tidyverse)
+library(zoo)
+library(eventstudyr)
+library(car)
 ```
 
 ```{r}
@@ -28,8 +33,62 @@ df <- vroom("Distribution.csv")
 df_full <- vroom("Return.csv")
 ```
 
-### Link to the github repository of this project {.appendix}
+# Part A: Stock Splits
 
+We will perform an event study on stock splits for the year 2010 using CRSP daily return data (more detail on the data used and the reference to it in the appendix)
+I considered the day that the stock split actually occured and not when it has been declared, as for this last one we have some missing information. We should considered that the effect on the stock price starts as soon as the stock split is declared and it is prolonged also after this actually happens, sometimes the stock price starts mobing even before the stock split is declared, with analysts expecting the company to do so.
+
+Here's a first look into the stock splits per month occured in 2010.
+```{r, fig.width=4.5, fig.height=2.5, fig.align='center'}
+#| message: false
+#| echo: false
+
+#Filtering for stock splits
+splits_2010 <- df |>
+  filter(DisDetailType == "STKSPL")
+
+#We create a variable to add for month
+splits_2010 <- splits_2010 |>
+  mutate(month = floor_date(DisPayDt, "month"))
+
+#We now group per month to see how many splits for each month
+splits_per_month <- splits_2010 |>
+  group_by(month) |>
+  summarise(num_splits = n())
+
+#We create a table with the number of stock splits as calculated before
+ggplot(splits_per_month, aes(x = month, y = num_splits)) +
+  geom_col(fill = "lightblue") +
+  labs(title = "Number of Stock Splits per Month in 2010",
+       x = "Month", y = "Number of Splits") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_minimal()
+```
+
+
+##Average CAR for Event Window (-1 +1)
+We are now going to use the full observation of stock returns in 2010 using companies in the S&P500, after filtering out for the list of S&P500 constituents for that year.
+With this we will then filter for stock splits and calculate Abnormal Returns for each stock on a given day as the difference between the stock's return and the return on the S&P500 index (already available in the data).
+We will finally compute CAR for the event window (-1 +1) and the average CAR and assess its statistical significance.
+
+```{r}
+#| message: false
+#| echo: false
+#filtering for stock splits
+splits_data_full <- df_full %>%
+  filter(DisDetailType == "STKSPL")
+```
+
+```{r}
+#| message: false
+#| echo: false
+#calculating abnormal returns
+```
+
+
+
+
+### Link to the github repository of this project {.appendix}
 [Github repository](https://github.com/suladi23/Event_Study-Stock_Split)
 
 ### Sources for the data {.appendix}
